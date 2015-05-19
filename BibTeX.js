@@ -1163,7 +1163,16 @@ function doExport() {
 		if(!type) type = "misc";
 		
 		// create a unique citation key
-		var citekey = buildCiteKey(item, citekeys);
+		var citekey = "";
+                
+                if (item.extra && item.extra.search(/bibcitekey\[[^\]]+\]/) != -1) {
+			citekey = item.extra.match(/bibcitekey\[([^\]]+)\]/)[1];
+			item.extra = item.extra.replace(/bibcitekey\[([^\]]+)\]/, "");
+		}
+		if(!citekey) {
+			// create a unique citation key
+			citekey = buildCiteKey(item, citekeys);
+		}
 		
 		// write citation key
 		Zotero.write((first ? "" : "\n\n") + "@"+type+"{"+citekey);
